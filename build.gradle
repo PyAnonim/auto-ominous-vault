@@ -1,0 +1,49 @@
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT' // Плагин для сборки Fabric-модов
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    // Здесь можно подключать дополнительные библиотеки, если нужно
+}
+
+dependencies {
+    // Базовая зависимость — код Minecraft
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // Читаемые имена для кода Minecraft (Yarn mappings)
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    // Загрузчик модов Fabric
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API — библиотека с готовыми инструментами для модов
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filteringCharset "UTF-8"
+
+    // Подстановка версии в fabric.mod.json
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8" // Настройка кодировки
+    it.options.release = 21       // Указываем, что код написан для Java 21
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
