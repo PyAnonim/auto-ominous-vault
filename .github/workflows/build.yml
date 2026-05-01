@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths-ignore:
       - '**.md'
-  workflow_dispatch:   # Позволяет запускать сборку вручную
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,14 +17,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
+      # Здесь мы устанавливаем Gradle без необходимости в gradlew
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.8
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: gradle build   # <-- команда gradle, а не ./gradlew
 
       - name: Upload JAR Artifacts
         uses: actions/upload-artifact@v4
